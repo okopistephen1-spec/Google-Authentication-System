@@ -1,0 +1,169 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-image: url("../images/church-background.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: #ffffff;
+    min-height: 100vh;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 15, 15, 0.78);
+    z-index: -1;
+}
+
+
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+}
+
+.brand-section {
+    margin-bottom: 40px;
+}
+
+.brand-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 18px;
+    border-radius: 50%;
+    border: 1px solid #777777;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.brand-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 50%;
+    padding: 5px;
+}
+
+.brand-section h1 {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.4px;
+    color: #ffffff;
+}
+
+.welcome-section {
+    margin-bottom: 30px;
+}
+
+.welcome-section h2 {
+    font-size: 30px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.welcome-section p {
+    color: #b8b8b8;
+    font-size: 14px;
+}
+
+/* LOGIN OPTIONS CONTAINER */
+
+.auth-options {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    width: 100%;
+    padding: 30px 22px;
+    border: 1px solid #555555;
+    border-radius: 16px;
+    background: #202020;
+}
+
+/* GOOGLE BUTTON */
+
+.g_id_signin {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    border: 1px solid #777777;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* EMAIL BUTTON */
+
+.email-button {
+    width: 100%;
+    min-height: 48px;
+    border: 1px solid #777777;
+    border-radius: 8px;
+    background: transparent;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.email-button:hover {
+    background: #333333;
+}
+
+/* FOOTER */
+
+.auth-footer {
+    margin-top: 30px;
+}
+
+.auth-footer p {
+    font-size: 11px;
+    line-height: 1.7;
+    color: #a0a0a0;
+}
+
+.auth-footer a {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .auth-card {
+        max-width: 100%;
+    }
+
+    .brand-section h1 {
+        font-size: 17px;
+    }
+
+    .welcome-section h2 {
+        font-size: 27px;
+    }
+
+    .auth-options {
+        padding: 25px 18px;
+    }
+}
