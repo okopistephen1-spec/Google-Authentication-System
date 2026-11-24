@@ -567,3 +567,115 @@ body,
         border-color 0.3s ease,
         box-shadow 0.3s ease;
 }
+
+/* =========================================
+   15. DESKTOP LOGIN LAYOUT
+========================================= */
+
+@media (min-width: 769px) {
+
+    .auth-container {
+        min-height: 100svh;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 50px 32px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 1120px;
+
+        margin: 0 auto;
+
+        padding: 55px 60px 35px;
+
+        display: grid;
+
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+
+        grid-template-areas:
+            "brand auth"
+            "welcome auth"
+            "footer footer";
+
+        column-gap: clamp(35px, 5vw, 75px);
+        row-gap: 0;
+
+        text-align: left;
+    }
+
+    /* Church branding */
+
+    .brand-section {
+        grid-area: brand;
+        margin-bottom: 25px;
+    }
+
+    .brand-logo {
+        margin: 0 0 18px;
+    }
+
+    /* Welcome message */
+
+    .welcome-section {
+        grid-area: welcome;
+        margin-bottom: 0;
+    }
+
+    .welcome-section h2 {
+        font-size: clamp(36px, 4vw, 48px);
+    }
+
+    .welcome-section p {
+        max-width: 400px;
+        margin: 0;
+    }
+
+    /* Authentication panel */
+
+    .auth-options {
+        grid-area: auth;
+
+        width: 100%;
+
+        padding: 35px 30px;
+
+        align-self: center;
+    }
+
+    /* Footer */
+
+    .auth-footer {
+        grid-area: footer;
+
+        margin-top: 45px;
+
+        text-align: center;
+    }
+
+}
+
+/* ADMIN REDIRECT BACK TO HOME BUTTON */
+
+.home-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #ffffff;
+    background: #000000;
+    /* border: 1px solid #e5e5e5; */
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.home-button:hover {
+    background: #f1f1f1;
+    transform: translateY(-2px);
+}

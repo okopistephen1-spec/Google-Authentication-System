@@ -60,7 +60,7 @@ def admin_required(function):
         # Check whether the user is logged in
         if "user_id" not in session:
             print("DEBUG: no user_id found in session")
-            return redirect(url_for("home"))
+            return redirect(url_for("admin_login"))
         print("DEBUG: Logged-in user ID:", session["user_id"])
 
         connection = get_db_connection()
@@ -82,7 +82,7 @@ def admin_required(function):
         # Check whether the account exists
         if user is None:
             session.clear()
-            return redirect(url_for("home"))
+            return redirect(url_for("admin_login"))
 
         # Check administrator permission
         if user[0] != "admin":
@@ -91,6 +91,14 @@ def admin_required(function):
         return function(*args, **kwargs)
 
     return decorated_function
+
+@app.route("/admin/login")
+def admin_login():
+
+    if "user_id" in session:
+        return redirect(url_for("admin_dashboard"))
+
+    return render_template("admin-log.html")
 
 @app.route("/admin/dashboard")
 @admin_required
@@ -104,10 +112,6 @@ def admin_dashboard():
 
 @app.route("/")
 def home():
-
-    if "user_id" in session:
-        return redirect(url_for("church_home"))
-
     return render_template("index.html")
 
 
@@ -121,16 +125,12 @@ def verify_google_token():
     data = request.get_json(silent=True)
 
     if not isinstance(data, dict):
-        return jsonify({
-            "error": "Invalid request data"
-        }), 400
+        return jsonify({"error": "Invalid request data"}), 400
 
     token = data.get("credential")
 
     if not isinstance(token, str) or not token.strip():
-        return jsonify({
-            "error": "No valid Google ID token provided"
-        }), 400
+        return jsonify({"error": "No valid Google ID token provided"}), 400
 
     try:
 
@@ -141,63 +141,52 @@ def verify_google_token():
             GOOGLE_CLIENT_ID
         )
 
-        # Extract verified user information
         google_id = user_data.get("sub")
-        name = user_data.get("name")
         email = user_data.get("email")
-        picture = user_data.get("picture")
 
         if (
             not google_id
-            or not name
             or not email
             or not user_data.get("email_verified")
         ):
             return jsonify({
-                "error": "Required verified Google account information is missing"
+                "error": "Verified Google account information is missing"
             }), 401
 
-        # Connect to the database
         connection = get_db_connection()
 
         try:
 
             cursor = connection.cursor()
 
-            # Register user if they don't already exist
+            # Only existing administrators can log in
             cursor.execute("""
-                INSERT OR IGNORE INTO users
-                (google_id, name, email, profile_picture)
-                VALUES (?, ?, ?, ?)
-            """, (google_id, name, email, picture))
-
-            connection.commit()
-
-            # Retrieve the user's database record
-            cursor.execute("""
-                SELECT id, name, email, profile_picture, role
+                SELECT id, name, email, role
                 FROM users
                 WHERE google_id = ?
-            """, (google_id,))
+                AND email = ?
+                AND role = 'admin'
+            """, (google_id, email))
 
             user = cursor.fetchone()
 
         finally:
             connection.close()
 
+        # Reject accounts that are not registered administrators
         if user is None:
             return jsonify({
-                "error": "Unable to retrieve your account"
-            }), 409
+                "error": "Access denied. This Google account is not an authorized administrator."
+            }), 403
 
-        # Create Flask login session
+        # Create administrator session
         session.clear()
-
         session["user_id"] = user[0]
 
         return jsonify({
             "success": True,
-            "message": "Google authentication successful!"
+            "message": "Administrator authentication successful!",
+            "redirect": url_for("admin_dashboard")
         })
 
     except ValueError:
@@ -212,7 +201,6 @@ def verify_google_token():
             "error": "Unable to contact Google's authentication service. Please try again."
         }), 503
 
-
 # ==========================================
 # 5. CHURCH HOME PAGE
 # ==========================================
@@ -220,38 +208,37 @@ def verify_google_token():
 @app.route("/home")
 def church_home():
 
-    # Check if the user is logged in
-    if "user_id" not in session:
-        return redirect(url_for("home"))
+    user_data = None
 
-    connection = get_db_connection()
+    if "user_id" in session:
 
-    try:
-        cursor = connection.cursor()
+        connection = get_db_connection()
 
-        cursor.execute("""
-            SELECT id, name, email, profile_picture, role
-            FROM users
-            WHERE id = ?
-        """, (session["user_id"],))
+        try:
+            cursor = connection.cursor()
 
-        user = cursor.fetchone()
+            cursor.execute("""
+                SELECT id, name, email, profile_picture, role
+                FROM users
+                WHERE id = ?
+            """, (session["user_id"],))
 
-    finally:
-        connection.close()
+            user = cursor.fetchone()
 
-    # Check if the user exists
-    if user is None:
-        session.clear()
-        return redirect(url_for("home"))
+        finally:
+            connection.close()
 
-    user_data = {
-        "id": user[0],
-        "name": user[1],
-        "email": user[2],
-        "profile_picture": user[3],
-        "role": user[4]
-    }
+        if user is None:
+            session.clear()
+
+        else:
+            user_data = {
+                "id": user[0],
+                "name": user[1],
+                "email": user[2],
+                "profile_picture": user[3],
+                "role": user[4]
+            }
 
     return render_template("home.html", user=user_data)
 

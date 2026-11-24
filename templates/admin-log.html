@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Immanuel Methodist Church Nigeria</title>
+
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif:wght@500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <a href="{{ url_for('home') }}" class="home-button">
+        ← Home
+    </a>
+
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch to dark mode">
+        <span id="theme-icon">🌒</span>
+    </button>
+
+    <main class="auth-container">
+
+        <div class="auth-card">
+
+            <!-- Church Branding -->
+            <div class="brand-section">
+
+                <div class="brand-logo">
+                    <img
+                        src="{{ url_for('static', filename='images/methodist-logo.jpeg') }}"
+                        alt="Methodist Church Nigeria Logo">
+                </div>
+
+                <p class="brand-label">IMMANUEL METHODIST CHURCH</p>
+                <h1>Nigeria</h1>
+
+            </div>
+
+            <!-- Welcome Section -->
+            <section class="welcome-section">
+
+                <span class="welcome-label">WELCOME TO OUR COMMUNITY</span>
+
+                <h2>Welcome Back</h2>
+
+                <p>
+                    Sign in or create an account to stay connected
+                    with your church community.
+                </p>
+
+            </section>
+
+            <!-- Authentication Options -->
+            <section class="auth-options">
+
+                <div class="auth-heading">
+                    <h3>Continue to your account</h3>
+                    <p>Choose how you would like to sign in.</p>
+                </div>
+
+                <!-- Google Authentication -->
+                <div id="g_id_onload"
+                    data-client_id="798727025386-14ekglkbiqlo3uu19qa1c0mp99o5fi6v.apps.googleusercontent.com"
+                    data-callback="handleCredentialResponse">
+                </div>
+
+                <div class="google-button-wrapper">
+                    <div class="g_id_signin"
+                        data-type="standard"
+                        data-size="large"
+                        data-theme="filled_white"
+                        data-text="continue_with"
+                        data-shape="rectangular"
+                        data-logo_alignment="left">
+                    </div>
+                </div>
+
+                <div class="auth-divider">
+                    <span></span>
+                    <p>OR</p>
+                    <span></span>
+                </div>
+
+                <!-- Email Authentication -->
+                <button type="button" class="email-button">
+                    <span class="email-icon">✉</span>
+                    <span>Continue with email</span>
+                    <span class="button-arrow">→</span>
+                </button>
+
+            </section>
+
+            <!-- Footer -->
+            <footer class="auth-footer">
+
+                <p>
+                    By continuing, you agree to use this platform
+                    respectfully as part of our church community.
+                </p>
+
+                <div class="footer-divider"></div>
+
+                <p class="copyright">
+                    &copy; 2026 Immanuel Methodist Church Nigeria.
+                    All rights reserved.
+                </p>
+
+            </footer>
+
+        </div>
+
+    </main>
+
+    <!-- Google Authentication Callback -->
+    <script>
+        async function handleCredentialResponse(response) {
+
+            try {
+
+                const serverResponse = await fetch("/verify-google-token", {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        credential: response.credential
+                    })
+                });
+
+                const result = await serverResponse.json();
+
+                if (serverResponse.ok && result.success) {
+
+                    window.location.replace("/home");
+
+                } else {
+
+                    alert(result.error || "Authentication failed. Please try again.");
+
+                }
+
+            } catch (error) {
+
+                console.error("Login error:", error);
+
+                alert("Something went wrong. Please try again.");
+
+            }
+        }
+    </script>
+
+    <script>
+        const themeToggle = document.getElementById("theme-toggle");
+        const themeIcon = document.getElementById("theme-icon");
+
+        // Load the saved theme
+        const savedTheme = localStorage.getItem("church-theme");
+
+        if (savedTheme === "dark") {
+            document.body.classList.add("dark-mode");
+            themeIcon.textContent = "☀️";
+            themeToggle.setAttribute("aria-label", "Switch to light mode");
+        }
+
+        // Switch themes when the button is clicked
+        themeToggle.addEventListener("click", () => {
+            document.body.classList.toggle("dark-mode");
+
+            const isDarkMode = document.body.classList.contains("dark-mode");
+
+            if (isDarkMode) {
+                localStorage.setItem("church-theme", "dark");
+                themeIcon.textContent = "☀️";
+                themeToggle.setAttribute("aria-label", "Switch to light mode");
+            } else {
+                localStorage.setItem("church-theme", "light");
+                themeIcon.textContent = "🌙";
+                themeToggle.setAttribute("aria-label", "Switch to dark mode");
+            }
+        });
+    </script>
+
+</body>
+
+</html>

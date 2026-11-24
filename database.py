@@ -1,8 +1,13 @@
+import os
 import sqlite3
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+DATABASE_PATH = os.path.join(BASE_DIR, "users.db")
 
 
 def get_db_connection():
-    connection = sqlite3.connect("users.db")
+    connection = sqlite3.connect("DATABASE_PATH")
     return connection
 
 
