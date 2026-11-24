@@ -1,9 +1,10 @@
 import sqlite3
 
+
 def get_db_connection():
     connection = sqlite3.connect("users.db")
-
     return connection
+
 
 def create_users_table():
 
@@ -22,17 +23,32 @@ def create_users_table():
 
             profile_picture TEXT,
 
+            role TEXT NOT NULL DEFAULT 'member',
+
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
         )
     """)
 
-    connection.commit()
+    # Check whether the role column already exists
+    cursor = connection.execute("PRAGMA table_info(users)")
 
+    columns = [column[1] for column in cursor.fetchall()]
+
+    # Add the role column if this is an existing database
+    if "role" not in columns:
+
+        connection.execute("""
+            ALTER TABLE users
+            ADD COLUMN role TEXT NOT NULL DEFAULT 'member'
+        """)
+
+    connection.commit()
     connection.close()
 
 
 if __name__ == "__main__":
+
     create_users_table()
 
     print("Users table has been created successfully!")

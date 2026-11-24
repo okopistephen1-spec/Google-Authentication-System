@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Church Home | Immanuel Methodist Church Nigeria</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="home-header">
+
+        <div class="church-brand">
+            <img
+                src="{{ url_for('static', filename='images/methodist-logo.jpeg') }}"
+                alt="Methodist Church Nigeria Logo"
+            >
+
+            <div>
+                <h2>Immanuel Methodist Church</h2>
+                <span>Nigeria</span>
+            </div>
+        </div>
+
+        <div class="user-profile">
+            <span>{{ user.name }}</span>
+            <img
+                src="{{ user.profile_picture or url_for('static', filename='images/default-profile.png') }}"
+                alt="Profile picture"
+            >
+        </div>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="home-container">
+
+        <!-- WELCOME SECTION -->
+        <section class="welcome-section">
+
+            <p>WELCOME TO IMMANUEL METHODIST CHURCH</p>
+
+            <h1>Welcome, {{ user.name }}</h1>
+
+            <p>
+                We are glad to have you here.
+                Grow in faith, connect with others, and stay updated
+                with everything happening in our church.
+            </p>
+
+        </section>
+
+
+        <!-- ANNOUNCEMENTS -->
+        <section class="announcements-section">
+
+            <h2>Church Announcements</h2>
+
+            <div class="announcement-card">
+                <p>Stay connected with our latest church announcements.</p>
+            </div>
+
+        </section>
+
+
+        <!-- QUICK ACCESS -->
+        <section class="quick-access-section">
+
+            <h2>Explore Our Church</h2>
+
+            <div class="quick-access-grid">
+
+                <a href="#" class="quick-card">
+                    <h3>Church Events</h3>
+                    <p>Discover upcoming programmes.</p>
+                </a>
+
+                <a href="#" class="quick-card">
+                    <h3>Sermons</h3>
+                    <p>Listen to messages and teachings.</p>
+                </a>
+
+                <a href="#" class="quick-card">
+                    <h3>Ministries</h3>
+                    <p>Discover our church ministries.</p>
+                </a>
+
+                <a href="#" class="quick-card">
+                    <h3>Prayer Requests</h3>
+                    <p>Share your prayer requests.</p>
+                </a>
+
+            </div>
+
+        </section>
+
+
+        <!-- UPCOMING EVENTS -->
+        <section class="events-section">
+
+            <h2>Upcoming Church Events</h2>
+
+            <p>Check back for upcoming church programmes and activities.</p>
+
+        </section>
+
+        <form action="{{ url_for('logout') }}" method="GET">
+            <button type="submit">Logout</button>
+        </form>
+    </main>
+
+</body>
+</html>
